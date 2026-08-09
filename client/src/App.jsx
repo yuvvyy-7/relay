@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import {
   createTask,
   deleteTask,
@@ -16,8 +17,9 @@ import {
 
 import { DependencyCards } from './components/DependencyCards.jsx';
 import { StatusPanel } from './components/StatusPanel.jsx';
-import { TaskForm } from './components/TaskForm.jsx';
-import { TaskList } from './components/TaskList.jsx';
+import { IncidentForm } from './components/IncidentForm.jsx';
+import { IncidentCard } from './components/IncidentCard.jsx';
+import { ResilienceTimeline } from './components/ResilienceTimeline.jsx';
 
 export default function App() {
   const [status, setStatus] = useState(null);
@@ -52,6 +54,7 @@ export default function App() {
             status: 'FAILED',
             message: 'Express API is not responding.',
           },
+
           database: {
             name: 'MongoDB',
             status: 'UNKNOWN',
@@ -190,6 +193,7 @@ export default function App() {
         {/* NAVBAR */}
         <nav className="flex items-center justify-between">
           <div className="flex items-center gap-3">
+
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-400 text-sm font-black text-zinc-950">
               R
             </div>
@@ -197,9 +201,11 @@ export default function App() {
             <span className="font-semibold tracking-tight">
               RELAY
             </span>
+
           </div>
 
           <div className="flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/70 px-3 py-1.5">
+
             <span
               className={`h-2 w-2 rounded-full ${
                 system === 'HEALTHY'
@@ -215,23 +221,31 @@ export default function App() {
             <span className="text-xs font-medium text-zinc-400">
               {system}
             </span>
+
           </div>
         </nav>
 
         {/* HERO */}
         <section className="pb-14 pt-20 lg:pt-28">
+
           <div className="max-w-4xl">
 
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/[0.06] px-3 py-1.5 text-xs font-medium text-emerald-300">
+
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+
               Autonomous resilience layer
+
             </div>
 
             <h1 className="max-w-4xl text-5xl font-bold tracking-[-0.04em] text-white sm:text-6xl lg:text-7xl">
+
               Your system shouldn't stop
+
               <span className="text-emerald-400">
                 {' '}because a dependency does.
               </span>
+
             </h1>
 
             <p className="mt-7 max-w-2xl text-lg leading-8 text-zinc-400">
@@ -242,7 +256,9 @@ export default function App() {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
+
               <div className="rounded-lg border border-zinc-800 bg-zinc-900/70 px-4 py-3">
+
                 <p className="text-xs text-zinc-500">
                   CURRENT STATE
                 </p>
@@ -250,9 +266,11 @@ export default function App() {
                 <p className="mt-1 font-semibold text-white">
                   {loading ? 'Checking...' : system}
                 </p>
+
               </div>
 
               <div className="rounded-lg border border-zinc-800 bg-zinc-900/70 px-4 py-3">
+
                 <p className="text-xs text-zinc-500">
                   QUEUED OPERATIONS
                 </p>
@@ -260,11 +278,16 @@ export default function App() {
                 <p className="mt-1 font-semibold text-white">
                   {pendingOperations}
                 </p>
+
               </div>
+
             </div>
+
           </div>
+
         </section>
 
+        {/* ERROR */}
         {error ? (
           <div className="mb-5 rounded-xl border border-red-500/30 bg-red-500/[0.07] px-5 py-4 text-sm text-red-200">
             {error}
@@ -275,7 +298,9 @@ export default function App() {
         <section className="space-y-4">
 
           <div className="flex items-end justify-between">
+
             <div>
+
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-600">
                 Live system
               </p>
@@ -283,14 +308,17 @@ export default function App() {
               <h2 className="mt-2 text-2xl font-semibold tracking-tight">
                 Resilience monitor
               </h2>
+
             </div>
 
             <span className="text-xs text-zinc-600">
               Auto-refreshing every 2s
             </span>
+
           </div>
 
           <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+
             <StatusPanel
               status={status}
               loading={loading}
@@ -298,42 +326,95 @@ export default function App() {
             />
 
             <DependencyCards status={status} />
+
           </div>
+
         </section>
 
-        {/* TASK AREA */}
+        {/* INCIDENT OPERATIONS */}
         <section className="mt-16">
+
           <div className="mb-5">
+
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-600">
-              Application
+              Incident operations
             </p>
 
             <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-              Keep working
+              Operate through failure
             </h2>
 
             <p className="mt-1 text-sm text-zinc-500">
-              Tasks continue to work even when the database doesn't.
+              Critical operations continue even when infrastructure doesn't.
             </p>
+
           </div>
 
+          {/* INCIDENT AREA */}
           <div className="grid gap-4 lg:grid-cols-[0.75fr_1.25fr]">
-            <TaskForm onCreate={handleCreate} />
 
-            <TaskList
-              tasks={tasks}
-              loading={loading}
-              error={tasksError}
-              onToggle={handleToggle}
-              onDelete={handleDelete}
-            />
+            {/* CREATE INCIDENT */}
+            <IncidentForm onCreate={handleCreate} />
+
+            {/* INCIDENT LIST */}
+            <section className="space-y-3">
+
+              {tasksError ? (
+                <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
+                  {tasksError}
+                </div>
+              ) : null}
+
+              {loading ? (
+
+                <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center text-sm text-zinc-600">
+                  Loading incidents...
+                </div>
+
+              ) : tasks.length === 0 ? (
+
+                <div className="rounded-xl border border-dashed border-zinc-800 p-8 text-center">
+
+                  <p className="text-sm text-zinc-500">
+                    No active incidents
+                  </p>
+
+                  <p className="mt-1 text-xs text-zinc-700">
+                    Report an incident to begin monitoring.
+                  </p>
+
+                </div>
+
+              ) : (
+
+                tasks.map((task) => (
+                  <IncidentCard
+                    key={task.clientId || task._id}
+                    task={task}
+                    onToggle={handleToggle}
+                    onDelete={handleDelete}
+                  />
+                ))
+
+              )}
+
+            </section>
+
           </div>
+
+          {/* RESILIENCE TIMELINE */}
+          <ResilienceTimeline
+            status={status}
+            pendingOperations={pendingOperations}
+          />
+
         </section>
 
         {/* HOW IT WORKS */}
         <section className="mt-20 border-t border-zinc-900 pt-12">
 
           <div className="max-w-2xl">
+
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-600">
               Failure response
             </p>
@@ -347,6 +428,7 @@ export default function App() {
               It adapts, preserves the user's work, and repairs the
               connection when possible.
             </p>
+
           </div>
 
           <div className="mt-8 grid gap-px overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-800 md:grid-cols-5">
@@ -358,10 +440,12 @@ export default function App() {
               ['04', 'RECOVER', 'Detect dependency restoration'],
               ['05', 'SYNC', 'Reconcile queued changes'],
             ].map(([number, title, description]) => (
+
               <div
                 key={number}
                 className="bg-zinc-950 p-5"
               >
+
                 <p className="text-xs font-mono text-emerald-400">
                   {number}
                 </p>
@@ -373,18 +457,22 @@ export default function App() {
                 <p className="mt-2 text-xs leading-5 text-zinc-600">
                   {description}
                 </p>
+
               </div>
+
             ))}
 
           </div>
+
         </section>
 
-        {/* ARCHITECTURE - MOVED TO BOTTOM */}
+        {/* ARCHITECTURE */}
         <footer className="mt-20 border-t border-zinc-900 py-8">
 
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
 
             <div>
+
               <p className="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-600">
                 Architecture
               </p>
@@ -392,9 +480,11 @@ export default function App() {
               <p className="mt-2 text-sm text-zinc-500">
                 React · Express · MongoDB · IndexedDB
               </p>
+
             </div>
 
             <div className="text-left sm:text-right">
+
               <p className="text-xs text-zinc-700">
                 RELAY
               </p>
@@ -402,6 +492,7 @@ export default function App() {
               <p className="mt-1 text-xs text-zinc-700">
                 Built for systems that keep going.
               </p>
+
             </div>
 
           </div>
@@ -409,6 +500,7 @@ export default function App() {
         </footer>
 
       </div>
+
     </main>
   );
 }
