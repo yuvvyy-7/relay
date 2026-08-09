@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createTask, deleteTask, getStatus, getTasks, updateTask } from './api.js';
+import { saveTask, saveTasks } from './services/localDb.js';
 import { DependencyCards } from './components/DependencyCards.jsx';
 import { StatusPanel } from './components/StatusPanel.jsx';
 import { TaskForm } from './components/TaskForm.jsx';
@@ -38,13 +39,21 @@ export default function App() {
   }
 
   async function loadTasks() {
-    try {
-      setTasksError('');
-      setTasks(await getTasks());
-    } catch (nextError) {
-      setTasksError(nextError.message);
-    }
+  try {
+    setTasksError('');
+
+    const nextTasks = await getTasks();
+
+    setTasks(nextTasks);
+
+    // Keep a local copy for future offline use.
+    const cacheableTasks = nextTasks.filter((task) => task.clientId);
+
+    await saveTasks(cacheableTasks);
+  } catch (nextError) {
+    setTasksError(nextError.message);
   }
+}
 
   async function loadData() {
     try {
@@ -64,10 +73,16 @@ export default function App() {
   }, []);
 
   async function handleCreate(title) {
-    const task = await createTask(title);
-    setTasks((current) => [task, ...current]);
-    setStatus(await getStatus());
-  }
+  const clientId = crypto.randomUUID();
+
+  const task = await createTask(title, clientId);
+
+  await saveTask(task);
+
+  setTasks((current) => [task, ...current]);
+
+  setStatus(await getStatus());
+}
 
   async function handleToggle(task) {
     const updated = await updateTask(task._id, !task.completed);

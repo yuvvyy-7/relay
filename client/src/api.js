@@ -31,10 +31,13 @@ export function getTasks() {
   return request('/tasks');
 }
 
-export function createTask(title) {
+export function createTask(title, clientId) {
   return request('/tasks', {
     method: 'POST',
-    body: JSON.stringify({ title }),
+    body: JSON.stringify({
+      title,
+      clientId,
+    }),
   });
 }
 
