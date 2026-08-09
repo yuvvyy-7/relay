@@ -8,9 +8,15 @@ const taskSchema = new mongoose.Schema(
       trim: true,
       maxlength: 160,
     },
+
     completed: {
       type: Boolean,
       default: false,
+    },
+
+    clientId: {
+      type: String,
+      index: true,
     },
   },
   {
