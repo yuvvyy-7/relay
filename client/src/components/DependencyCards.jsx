@@ -1,42 +1,109 @@
 import React from 'react';
 
 export function DependencyCards({ status }) {
-  const backend = status?.dependencies?.backend;
-  const database = status?.dependencies?.database;
-  const cards = [
-    {
+  const dependencies = [
+    status?.dependencies?.backend || {
       name: 'Backend',
-      value: backend?.status || 'CHECKING',
-      message: backend?.message || 'Waiting for health check.',
+      status: 'UNKNOWN',
+      message: 'Waiting for health data.',
     },
-    {
+
+    status?.dependencies?.database || {
       name: 'MongoDB',
-      value: database?.status || 'CHECKING',
-      message: database?.message || 'Waiting for health check.',
+      status: 'UNKNOWN',
+      message: 'Waiting for health data.',
     },
   ];
 
-  const styles = {
-    HEALTHY: 'bg-emerald-400 text-emerald-300',
-    FAILED: 'bg-red-400 text-red-300',
-    UNKNOWN: 'bg-zinc-500 text-zinc-300',
-    CHECKING: 'bg-zinc-500 text-zinc-300',
-  };
+  function getStyle(dependency) {
+    if (dependency.status === 'HEALTHY') {
+      return {
+        color: 'var(--green)',
+        label: 'ONLINE',
+      };
+    }
+
+    if (dependency.status === 'FAILED') {
+      return {
+        color: 'var(--danger)',
+        label: 'OFFLINE',
+      };
+    }
+
+    return {
+      color: 'var(--text-faint)',
+      label: 'UNKNOWN',
+    };
+  }
 
   return (
-    <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-      {cards.map((card) => (
-        <article key={card.name} className="border border-zinc-800 bg-zinc-900 p-4">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="text-sm font-medium text-zinc-300">{card.name}</h3>
-            <span className={`h-3 w-3 ${styles[card.value]?.split(' ')[0] || 'bg-zinc-500'}`} />
+    <div
+      className="grid border"
+      style={{
+        borderColor: 'var(--line)',
+        background: 'var(--bg-panel)',
+      }}
+    >
+
+      {dependencies.map((dependency, index) => {
+        const visual = getStyle(dependency);
+
+        return (
+          <div
+            key={dependency.name}
+            className={`p-6 ${
+              index !== dependencies.length - 1
+                ? 'border-b'
+                : ''
+            }`}
+            style={{
+              borderColor: 'var(--line)',
+            }}
+          >
+
+            <div className="flex items-center justify-between">
+
+              <div
+                className="text-[10px] uppercase tracking-[0.2em]"
+                style={{ color: 'var(--text-faint)' }}
+              >
+                Dependency
+              </div>
+
+              <div
+                className="flex items-center gap-2 text-[10px]"
+                style={{ color: visual.color }}
+              >
+
+                <span
+                  className="relay-pulse h-2 w-2"
+                  style={{
+                    background: visual.color,
+                    boxShadow: `0 0 10px ${visual.color}`,
+                  }}
+                />
+
+                {visual.label}
+
+              </div>
+
+            </div>
+
+            <h3 className="mt-5 text-xl font-semibold">
+              {dependency.name}
+            </h3>
+
+            <p
+              className="mt-2 text-[10px] leading-5"
+              style={{ color: 'var(--text-faint)' }}
+            >
+              {dependency.message}
+            </p>
+
           </div>
-          <p className={`mt-4 text-xl font-semibold ${styles[card.value]?.split(' ')[1] || 'text-zinc-300'}`}>
-            {card.value}
-          </p>
-          <p className="mt-2 text-xs leading-5 text-zinc-500">{card.message}</p>
-        </article>
-      ))}
-    </section>
+        );
+      })}
+
+    </div>
   );
 }

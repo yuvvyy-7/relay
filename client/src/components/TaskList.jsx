@@ -29,7 +29,7 @@ export function TaskList({ tasks, loading, error, onToggle, onDelete }) {
               <p className={`break-words text-sm font-medium ${task.completed ? 'text-zinc-500 line-through' : 'text-white'}`}>
                 {task.title}
               </p>
-              <p className="mt-1 text-xs text-zinc-500">Saved in MongoDB</p>
+              <p className="mt-1 text-xs text-zinc-500">Saved</p>
             </div>
             <button
               className="border border-zinc-700 px-3 py-2 text-sm text-zinc-300 hover:border-red-400 hover:text-red-300"

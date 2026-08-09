@@ -1,15 +1,679 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* =========================================================
+   RELAY — VISUAL SYSTEM
+   ========================================================= */
+
+:root {
+  --bg: #090c11;
+  --bg-panel: #10151d;
+  --bg-panel-raised: #141a23;
+
+  --line: #1f2733;
+  --line-bright: #2e3a4a;
+
+  --text: #e7ebf0;
+  --text-dim: #7c8798;
+  --text-faint: #4b5563;
+
+  --amber: #ff8c42;
+  --amber-dim: rgba(255, 140, 66, 0.12);
+
+  --green: #5fe3a6;
+  --green-dim: rgba(95, 227, 166, 0.1);
+
+  --blue: #5b8def;
+  --danger: #e5484d;
+}
+
+/* =========================================================
+   RESET
+   ========================================================= */
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  min-width: 320px;
+
+  color: var(--text);
+
+  font-family: 'Space Grotesk', sans-serif;
+
+  background:
+    radial-gradient(
+      circle at 8% -5%,
+      rgba(255, 140, 66, 0.055),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 92% -5%,
+      rgba(91, 141, 239, 0.045),
+      transparent 25%
+    ),
+    linear-gradient(
+      rgba(255, 255, 255, 0.012) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.012) 1px,
+      transparent 1px
+    ),
+    var(--bg);
+
+  background-size:
+    auto,
+    auto,
+    48px 48px,
+    48px 48px;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+
+/* =========================================================
+   TYPOGRAPHY
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: -0.025em;
+}
+
+p {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+code,
+pre {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Small labels / technical information */
+.text-\[9px\],
+.text-\[10px\],
+.text-\[11px\],
+.text-\[12px\] {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* =========================================================
+   MAIN PAGE WIDTH
+   ========================================================= */
+
+main > div {
+  max-width: 1240px !important;
+}
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+nav {
+  min-height: 52px;
+}
+
+nav .text-\[10px\] {
+  letter-spacing: 0.18em;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+/*
+   The original hero was too tall.
+   Reduce vertical breathing room so the actual product
+   appears much earlier on screen.
+*/
+
+main > div > section:first-of-type {
+  padding-top: 62px !important;
+  padding-bottom: 46px !important;
+}
+
+/* Hero heading */
+
+main > div > section:first-of-type h1 {
+  max-width: 850px !important;
+
+  font-size: clamp(3.5rem, 7vw, 6.4rem) !important;
+  line-height: 0.96 !important;
+
+  letter-spacing: -0.055em !important;
+}
+
+/* Hero description */
+
+main > div > section:first-of-type h1 + p {
+  max-width: 720px !important;
+
+  margin-top: 25px !important;
+
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+
+  color: var(--text-dim) !important;
+}
+
+/* =========================================================
+   HERO BADGE
+   ========================================================= */
+
+main > div > section:first-of-type > div:first-child {
+  margin-bottom: 20px !important;
+}
+
+main > div > section:first-of-type > div:first-child {
+  border-color: rgba(255, 140, 66, 0.3) !important;
+}
+
+/* =========================================================
+   RELAY DIAGRAM
+   ========================================================= */
+
+main > div > section:first-of-type
+  h1
+  + p
+  + div {
+  margin-top: 34px !important;
+
+  padding: 22px 26px !important;
+
+  border-color: var(--line-bright) !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.018),
+      transparent 55%
+    ),
+    var(--bg-panel) !important;
+}
+
+/* Diagram nodes */
+
+main > div > section:first-of-type
+  h1
+  + p
+  + div
+  > div:nth-child(2) {
+  min-height: 118px;
+}
+
+/* Make nodes slightly tighter */
+
+main > div > section:first-of-type
+  h1
+  + p
+  + div
+  > div:nth-child(2)
+  > div {
+  min-width: 155px;
+}
+
+/* Relay node */
+
+main > div > section:first-of-type
+  h1
+  + p
+  + div
+  > div:nth-child(2)
+  > div:nth-child(3) {
+  min-width: 180px;
+}
+
+/* =========================================================
+   HERO METRICS
+   ========================================================= */
+
+/*
+   Fix the awkward half-width metric block.
+*/
+
+main > div > section:first-of-type
+  h1
+  + p
+  + div
+  + div {
+  max-width: 720px !important;
+
+  margin-top: 12px !important;
+
+  width: 100% !important;
+}
+
+/* Metric cells */
+
+main > div > section:first-of-type
+  h1
+  + p
+  + div
+  + div
+  > div {
+  min-height: 74px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* =========================================================
+   SECTION SPACING
+   ========================================================= */
+
+main > div > section:not(:first-of-type) {
+  margin-top: 72px !important;
+}
+
+/* =========================================================
+   LIVE SYSTEM
+   ========================================================= */
+
+main > div > section:nth-of-type(2) {
+  margin-top: 54px !important;
+}
+
+/* Section titles */
+
+main > div > section:nth-of-type(2) h2,
+main > div > section:nth-of-type(3) h2,
+main > div > section:nth-of-type(4) h2 {
+  font-size: 1.7rem !important;
+  line-height: 1.1 !important;
+}
+
+/* =========================================================
+   STATUS / DEPENDENCY CARDS
+   ========================================================= */
+
+main > div > section:nth-of-type(2)
+  .grid {
+  border-color: var(--line) !important;
+}
+
+/* Make status area feel like one dashboard */
+
+main > div > section:nth-of-type(2)
+  > .grid {
+  min-height: 190px;
+}
+
+/* =========================================================
+   INCIDENT AREA
+   ========================================================= */
+
+main > div > section:nth-of-type(3) {
+  margin-top: 76px !important;
+}
+
+/* Incident form */
+
+main > div > section:nth-of-type(3)
+  form
+  input,
+main > div > section:nth-of-type(3)
+  form
+  select {
+  border-radius: 8px !important;
+
+  border-color: var(--line-bright) !important;
+
+  background: var(--bg-panel-raised) !important;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+main > div > section:nth-of-type(3)
+  form
+  input:focus,
+main > div > section:nth-of-type(3)
+  form
+  select:focus {
+  border-color: rgba(255, 140, 66, 0.55) !important;
+
+  box-shadow:
+    0 0 0 3px rgba(255, 140, 66, 0.06);
+}
+
+/* =========================================================
+   INCIDENT LIST
+   ========================================================= */
+
+main > div > section:nth-of-type(3)
+  article {
+  transition:
+    background 150ms ease,
+    padding-left 150ms ease;
+}
+
+main > div > section:nth-of-type(3)
+  article:hover {
+  background: rgba(255, 255, 255, 0.012) !important;
+}
+
+/* =========================================================
+   FAILURE PIPELINE
+   ========================================================= */
+
+/*
+   The pipeline should feel like one connected system,
+   not five random cards.
+*/
+
+main > div > section:nth-of-type(4) {
+  margin-top: 92px !important;
+}
+
+main > div > section:nth-of-type(4)
+  > div:last-child {
+  border-color: var(--line) !important;
+
+  background: var(--line) !important;
+
+  border-radius: 2px;
+}
+
+/* Pipeline cells */
+
+main > div > section:nth-of-type(4)
+  > div:last-child
+  > div {
+  min-height: 150px;
+}
+
+/* Pipeline arrow */
+
+main > div > section:nth-of-type(4)
+  > div:last-child
+  > div:nth-child(even) {
+  min-width: 38px;
+
+  font-size: 13px;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+  margin-top: 72px !important;
+
+  padding-top: 30px !important;
+  padding-bottom: 30px !important;
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes relayPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(0.9);
+  }
+}
+
+.relay-pulse {
+  display: inline-block;
+
+  animation:
+    relayPulse 2.2s ease-in-out infinite;
+}
+
+.relay-glow {
+  box-shadow:
+    0 0 0 1px rgba(95, 227, 166, 0.08),
+    0 0 22px rgba(95, 227, 166, 0.07);
+}
+
+.relay-amber-glow {
+  box-shadow:
+    0 0 0 1px rgba(255, 140, 66, 0.08),
+    0 0 25px rgba(255, 140, 66, 0.07);
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line-bright);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a485b;
+}
+
+/* =========================================================
+   SELECTION
+   ========================================================= */
+
+::selection {
+  background: rgba(255, 140, 66, 0.25);
+  color: white;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+  main > div > section:first-of-type {
+    padding-top: 46px !important;
+    padding-bottom: 32px !important;
+  }
+
+  main > div > section:first-of-type h1 {
+    font-size: clamp(3rem, 14vw, 5rem) !important;
+  }
+
+  main > div > section:first-of-type
+    h1
+    + p {
+    font-size: 14px !important;
+  }
+
+  main > div > section:first-of-type
+    h1
+    + p
+    + div {
+    overflow-x: auto;
+  }
+
+  main > div > section:nth-of-type(4)
+    > div:last-child {
+    grid-template-columns: 1fr !important;
+  }
+
+  footer {
+    margin-top: 55px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  body {
+    background-size:
+      auto,
+      auto,
+      32px 32px,
+      32px 32px;
+  }
+
+  main > div {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  main > div > section:first-of-type h1 {
+    font-size: 3.1rem !important;
+  }
+
+  main > div > section:first-of-type
+    h1
+    + p
+    + div {
+    padding: 18px !important;
+  }
+
+  nav {
+    padding-bottom: 15px !important;
+  }
+}
+
+/* =========================================================
+   ARCHITECTURE FOOTER
+   ========================================================= */
+
+.architecture-footer {
+  width: 100% !important;
+
+  margin-top: 80px !important;
+  padding: 0 !important;
+  padding-top: 32px !important;
+  padding-bottom: 32px !important;
+
+  border-top: 1px solid var(--line) !important;
+
+  background: transparent !important;
+
+  box-sizing: border-box !important;
+}
+
+.architecture-inner {
+  width: 100% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  gap: 32px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  background: transparent !important;
+  border: 0 !important;
+
+  box-sizing: border-box !important;
+}
+
+.architecture-label {
+  margin: 0 !important;
+
+  font-family: "IBM Plex Mono", monospace !important;
+  font-size: 10px !important;
+  line-height: 1.5 !important;
+
+  text-transform: uppercase !important;
+  letter-spacing: 0.22em !important;
+
+  color: var(--text-faint) !important;
+}
+
+.architecture-stack {
+  margin: 8px 0 0 !important;
+
+  font-family: "IBM Plex Mono", monospace !important;
+  font-size: 11px !important;
+  line-height: 1.6 !important;
+
+  color: var(--text-dim) !important;
+}
+
+.architecture-brand {
+  margin: 0 !important;
+
+  text-align: right !important;
+}
+
+.architecture-name {
+  margin: 0 !important;
+
+  font-family: "Space Grotesk", sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+
+  color: var(--amber) !important;
+}
+
+.architecture-tagline {
+  margin: 4px 0 0 !important;
+
+  font-family: "IBM Plex Mono", monospace !important;
+  font-size: 10px !important;
+  line-height: 1.5 !important;
+
+  color: var(--text-faint) !important;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 640px) {
+  .architecture-footer {
+    margin-top: 56px !important;
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+  }
+
+  .architecture-inner {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  .architecture-brand {
+    text-align: left !important;
+  }
+}
+
 
 @keyframes recovery {
   0% {

@@ -10,7 +10,9 @@ export function IncidentForm({ onCreate }) {
 
     const nextTitle = title.trim();
 
-    if (!nextTitle || saving) return;
+    if (!nextTitle || saving) {
+      return;
+    }
 
     try {
       setSaving(true);
@@ -25,9 +27,20 @@ export function IncidentForm({ onCreate }) {
   }
 
   return (
-    <section className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6">
+    <section
+      className="border p-6"
+      style={{
+        borderColor: 'var(--line)',
+        background: 'var(--bg-panel)',
+      }}
+    >
+
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-zinc-600">
+
+        <p
+          className="text-[10px] uppercase tracking-[0.2em]"
+          style={{ color: 'var(--text-faint)' }}
+        >
           Operations
         </p>
 
@@ -35,14 +48,27 @@ export function IncidentForm({ onCreate }) {
           Report incident
         </h2>
 
-        <p className="mt-1 text-sm text-zinc-500">
-          Create an incident even when infrastructure is unavailable.
+        <p
+          className="mt-2 text-[10px] leading-5"
+          style={{ color: 'var(--text-dim)' }}
+        >
+          Register operational events without depending on
+          infrastructure availability.
         </p>
+
       </div>
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="mt-7 space-y-5"
+      >
+
         <div>
-          <label className="mb-2 block text-xs font-medium text-zinc-400">
+
+          <label
+            className="mb-2 block text-[10px] uppercase tracking-wider"
+            style={{ color: 'var(--text-faint)' }}
+          >
             Incident description
           </label>
 
@@ -50,13 +76,23 @@ export function IncidentForm({ onCreate }) {
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             disabled={saving}
-            placeholder="e.g. Payment service unavailable"
-            className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-white outline-none transition placeholder:text-zinc-700 focus:border-emerald-400 disabled:opacity-50"
+            placeholder="Payment service unavailable"
+            className="w-full rounded-lg border px-4 py-3 text-xs outline-none transition"
+            style={{
+              borderColor: 'var(--line)',
+              background: 'var(--bg-panel-raised)',
+              color: 'var(--text)',
+            }}
           />
+
         </div>
 
         <div>
-          <label className="mb-2 block text-xs font-medium text-zinc-400">
+
+          <label
+            className="mb-2 block text-[10px] uppercase tracking-wider"
+            style={{ color: 'var(--text-faint)' }}
+          >
             Severity
           </label>
 
@@ -64,22 +100,34 @@ export function IncidentForm({ onCreate }) {
             value={severity}
             onChange={(event) => setSeverity(event.target.value)}
             disabled={saving}
-            className="w-full rounded-lg border border-zinc-800 bg-zinc-950 px-4 py-3 text-sm text-white outline-none focus:border-emerald-400 disabled:opacity-50"
+            className="w-full rounded-lg border px-4 py-3 text-xs outline-none"
+            style={{
+              borderColor: 'var(--line)',
+              background: 'var(--bg-panel-raised)',
+              color: 'var(--text)',
+            }}
           >
             <option>SEV-1</option>
             <option>SEV-2</option>
             <option>SEV-3</option>
           </select>
+
         </div>
 
         <button
           type="submit"
           disabled={saving || !title.trim()}
-          className="w-full rounded-lg bg-emerald-400 px-4 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-emerald-300 disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-zinc-600"
+          className="w-full rounded-lg px-4 py-3 text-xs font-semibold transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40"
+          style={{
+            background: 'var(--amber)',
+            color: '#100A05',
+          }}
         >
-          {saving ? 'Registering incident...' : 'Report incident'}
+          {saving ? 'REGISTERING...' : 'REPORT INCIDENT'}
         </button>
+
       </form>
+
     </section>
   );
 }

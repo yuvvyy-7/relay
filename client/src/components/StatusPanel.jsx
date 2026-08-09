@@ -5,132 +5,118 @@ export function StatusPanel({
   loading,
   pendingOperations = 0,
 }) {
-  const system = status?.system || status?.mode;
+  const system = status?.system || status?.mode || 'UNKNOWN';
 
-  const statusStyles = {
+  const config = {
     HEALTHY: {
-      text: 'text-emerald-300',
-      dot: 'bg-emerald-400',
-      label: 'SYSTEM OPERATIONAL',
+      color: 'var(--green)',
+      label: 'Operational',
+      message: 'All monitored dependencies are responding normally.',
     },
 
     DEGRADED: {
-      text: 'text-amber-300',
-      dot: 'bg-amber-300',
-      label: 'FAILURE DETECTED',
+      color: 'var(--amber)',
+      label: 'Degraded',
+      message: 'Primary infrastructure is unavailable. Local fallback is active.',
     },
 
     RECOVERING: {
-      text: 'text-sky-300',
-      dot: 'bg-sky-300',
-      label: 'RECOVERY IN PROGRESS',
+      color: 'var(--blue)',
+      label: 'Recovering',
+      message: 'Infrastructure restored. RELAY is synchronizing pending work.',
     },
 
     FAILED: {
-      text: 'text-red-300',
-      dot: 'bg-red-400',
-      label: 'SYSTEM OFFLINE',
+      color: 'var(--danger)',
+      label: 'Failed',
+      message: 'The backend is unavailable.',
+    },
+
+    UNKNOWN: {
+      color: 'var(--text-faint)',
+      label: 'Unknown',
+      message: 'Waiting for the health monitor.',
     },
   };
 
-  const current = statusStyles[system] || {
-    text: 'text-zinc-300',
-    dot: 'bg-zinc-500',
-    label: 'CHECKING SYSTEM',
-  };
-
-  const isRecovering = system === 'RECOVERING';
+  const current = config[system] || config.UNKNOWN;
 
   return (
-    <section className="border border-zinc-800 bg-zinc-900/70 p-6">
-      <div className="flex items-start justify-between gap-6">
-        <div>
-          <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
-            System status
-          </p>
+    <section
+      className="border p-6"
+      style={{
+        borderColor: 'var(--line)',
+        background: 'var(--bg-panel)',
+      }}
+    >
 
-          <div className="mt-3 flex items-center gap-3">
+      <div className="flex items-start justify-between">
+
+        <div>
+
+          <div
+            className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em]"
+            style={{ color: 'var(--text-faint)' }}
+          >
+
             <span
-              className={`h-3 w-3 rounded-full ${current.dot} ${
-                isRecovering ? 'animate-pulse' : ''
-              }`}
-              aria-hidden="true"
+              className="relay-pulse h-2 w-2"
+              style={{
+                background: current.color,
+                boxShadow: `0 0 12px ${current.color}`,
+              }}
             />
 
-            <h2
-              className={`text-4xl font-bold tracking-tight ${current.text}`}
-            >
-              {loading ? 'CHECKING' : system || 'UNKNOWN'}
-            </h2>
+            System status
+
           </div>
 
-          <p className={`mt-2 text-sm ${current.text}`}>
-            {loading ? 'Checking dependencies...' : current.label}
-          </p>
+          <h2
+            className="mt-5 text-4xl font-semibold"
+            style={{ color: current.color }}
+          >
+            {loading ? 'CHECKING' : system}
+          </h2>
+
         </div>
 
-        <div className="min-w-[120px] border-l border-zinc-800 pl-5">
-          <p className="text-xs uppercase tracking-wider text-zinc-500">
-            Pending
-          </p>
+        <div
+          className="border px-3 py-2 text-right"
+          style={{
+            borderColor: 'var(--line)',
+            background: 'var(--bg-panel-raised)',
+          }}
+        >
 
-          <p className="mt-1 text-3xl font-bold text-white">
+          <div
+            className="text-[9px] uppercase"
+            style={{ color: 'var(--text-faint)' }}
+          >
+            Queue
+          </div>
+
+          <div className="mt-1 text-sm">
             {pendingOperations}
-          </p>
+          </div>
 
-          <p className="text-xs text-zinc-600">
-            operations
-          </p>
         </div>
+
       </div>
 
-      {isRecovering && (
-        <div className="mt-6 border-t border-zinc-800 pt-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-sky-300">
-                Restoring system
-              </p>
+      <div
+        className="mt-8 border-t pt-5"
+        style={{ borderColor: 'var(--line)' }}
+      >
 
-              <p className="mt-1 text-xs text-zinc-500">
-                Synchronizing local operations with MongoDB
-              </p>
-            </div>
+        <p
+          className="text-xs leading-6"
+          style={{ color: 'var(--text-dim)' }}
+        >
+          {current.message}
+        </p>
 
-            <span className="text-xs font-medium text-sky-400">
-              ACTIVE
-            </span>
-          </div>
+      </div>
 
-          <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-zinc-800">
-            <div className="h-full w-1/3 animate-[recovery_1.5s_ease-in-out_infinite] rounded-full bg-sky-400" />
-          </div>
-
-          <div className="mt-4 grid grid-cols-3 gap-2 text-xs">
-            <div className="text-sky-300">
-              ● Reconnected
-            </div>
-
-            <div className="text-sky-300">
-              ● Syncing queue
-            </div>
-
-            <div className="text-zinc-600">
-              ○ Verified
-            </div>
-          </div>
-        </div>
-      )}
-
-      {!isRecovering && (
-        <div className="mt-6 border-t border-zinc-800 pt-5">
-          <p className="text-sm leading-6 text-zinc-400">
-            RELAY continuously monitors its dependencies and
-            automatically switches to local persistence when the
-            database becomes unavailable.
-          </p>
-        </div>
-      )}
     </section>
   );
 }
