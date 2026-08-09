@@ -1,5 +1,7 @@
 import express from 'express';
+import crypto from 'node:crypto';
 import { Task } from '../models/Task.js';
+
 
 export const tasksRouter = express.Router();
 
@@ -17,10 +19,24 @@ tasksRouter.post('/', async (req, res, next) => {
     const title = String(req.body.title || '').trim();
 
     if (!title) {
-      return res.status(400).json({ message: 'Task title is required.' });
+      return res.status(400).json({
+        message: 'Task title is required.',
+      });
     }
 
-    const task = await Task.create({ title });
+    const clientId = String(req.body.clientId || crypto.randomUUID());
+
+    const existingTask = await Task.findOne({ clientId });
+
+    if (existingTask) {
+      return res.json(existingTask);
+    }
+
+    const task = await Task.create({
+      title,
+      clientId,
+    });
+
     res.status(201).json(task);
   } catch (error) {
     next(error);
