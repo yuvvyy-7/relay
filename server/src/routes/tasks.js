@@ -45,11 +45,20 @@ tasksRouter.post('/', async (req, res, next) => {
 
 tasksRouter.patch('/:id', async (req, res, next) => {
   try {
-    const task = await Task.findByIdAndUpdate(
+    let task = await Task.findByIdAndUpdate(
       req.params.id,
       { completed: Boolean(req.body.completed) },
       { new: true, runValidators: true }
     );
+
+    // If it's not a MongoDB _id, try clientId instead.
+    if (!task) {
+      task = await Task.findOneAndUpdate(
+        { clientId: req.params.id },
+        { completed: Boolean(req.body.completed) },
+        { new: true, runValidators: true }
+      );
+    }
 
     if (!task) {
       return res.status(404).json({ message: 'Task not found.' });
@@ -63,10 +72,19 @@ tasksRouter.patch('/:id', async (req, res, next) => {
 
 tasksRouter.delete('/:id', async (req, res, next) => {
   try {
-    const task = await Task.findByIdAndDelete(req.params.id);
+    let task = await Task.findByIdAndDelete(req.params.id);
+
+    // If it's not a MongoDB _id, try clientId instead.
+    if (!task) {
+      task = await Task.findOneAndDelete({
+        clientId: req.params.id,
+      });
+    }
 
     if (!task) {
-      return res.status(404).json({ message: 'Task not found.' });
+      return res.status(404).json({
+        message: 'Task not found.',
+      });
     }
 
     res.status(204).end();

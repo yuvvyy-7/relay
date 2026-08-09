@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createTask, deleteTask, getStatus, getTasks, updateTask } from './api.js';
+import { createTask, deleteTask, getStatus, getTasks, updateTask, syncOperations } from './api.js';
 import { saveTask, saveTasks } from './services/localDb.js';
 import { DependencyCards } from './components/DependencyCards.jsx';
 import { StatusPanel } from './components/StatusPanel.jsx';
@@ -65,7 +65,25 @@ export default function App() {
 
   useEffect(() => {
     loadData();
-    const healthTimer = window.setInterval(loadHealth, 2000);
+    const healthTimer = window.setInterval(async () => {
+      await loadHealth();
+
+      try {
+        const currentStatus = await getStatus();
+
+        if (
+          currentStatus.system === 'RECOVERING' ||
+          currentStatus.system === 'HEALTHY'
+        ) {
+          await syncOperations();
+          await loadTasks();
+        }
+
+        setStatus(currentStatus);
+      } catch {
+        // Still unavailable.
+      }
+    }, 2000);
 
     return () => {
       window.clearInterval(healthTimer);
@@ -81,18 +99,34 @@ export default function App() {
 
   setTasks((current) => [task, ...current]);
 
-  setStatus(await getStatus());
+  try {
+    setStatus(await getStatus());
+  } catch {
+    // Health monitor will update itself.
+  }
 }
 
   async function handleToggle(task) {
-    const updated = await updateTask(task._id, !task.completed);
-    setTasks((current) => current.map((item) => (item._id === updated._id ? updated : item)));
-  }
+  const updated = await updateTask(
+    task._id || task.clientId,
+    !task.completed,
+    task
+  );
+
+  setTasks((current) =>
+    current.map((item) =>
+      item.clientId === task.clientId ? updated : item
+    )
+  );
+}
 
   async function handleDelete(task) {
-    await deleteTask(task._id);
-    setTasks((current) => current.filter((item) => item._id !== task._id));
-  }
+  await deleteTask(task._id || task.clientId, task);
+
+  setTasks((current) =>
+    current.filter((item) => item.clientId !== task.clientId)
+  );
+}
 
   return (
     <main className="min-h-screen bg-zinc-950 text-zinc-100">
